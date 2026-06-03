@@ -1,0 +1,27 @@
+Repository ke root par jao (CP-Library).
+Add file → Create new file.
+Filename box me likho:
+FolderName/README.md
+
+Example
+
+Graph/README.md
+Content me kuch bhi likh do:
+# Graph Algorithms
+Commit changes.
+
+Folder ban gaya. ✅
+
+Folder ke andar nayi file add karni ho
+
+Folder open karo.
+
+Add file → Create new file
+
+Aur sirf file name likho:
+
+dijkstra.cpp
+
+Na ki:
+
+Graph/dijkstra.cpp
