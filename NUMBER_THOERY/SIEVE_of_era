@@ -1,0 +1,41 @@
+const int N = 1000001; // max number
+vector<bool> isPrime(N, true);
+vector<int> primeCount(N, 0);
+
+// 🔹 Sieve + Prefix count
+void sieve() {
+    isPrime[0] = isPrime[1] = false;
+
+    for (int i = 2; i * i < N; i++) {
+        if (isPrime[i]) {
+            for (int j = i * i; j < N; j += i)
+                isPrime[j] = false;
+        }
+    }
+
+    // prefix sum of prime counts
+    for (int i = 1; i < N; i++)
+        primeCount[i] = primeCount[i - 1] + isPrime[i];
+}
+
+// 🔹 Count primes in range [L, R]
+int countPrimesInRange(int L, int R) {
+    if (L < 1) L = 1;
+    if (R >= N) R = N - 1;
+    return primeCount[R] - primeCount[L - 1];
+}
+
+// 🔹 Example usage
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    sieve(); // Precompute
+
+    int L, R;
+    cin >> L >> R;
+
+    cout << countPrimesInRange(L, R) << "\n";
+
+    return 0;
+}
