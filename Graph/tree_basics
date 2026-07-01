@@ -1,0 +1,56 @@
+  // diameter name snippet  , bfs name snippet,  
+// 1 based   means   node start  from 1,2,3,4,5,6,7,8
+ int timer=0;
+void dfs(int curr, vector<vector<int>>& edges, int parent, vector<int>& level,vector<int>& parents,vector<int>& subtreeSize,vector<int>& farthestleafnode,vector<int>&intime, vector<int>&outtime ){
+
+     intime[curr]=timer++;
+     parents[curr] = parent;
+
+     subtreeSize[curr] = 1;
+     farthestleafnode[curr]=0;
+     if(parent == -1)
+        level[curr] = 0;
+     else
+        level[curr] = level[parent] + 1;
+    
+     for(int neighbour : edges[curr]){
+          if(neighbour != parent){
+               dfs(neighbour, edges, curr, level, parents,subtreeSize, farthestleafnode, intime, outtime);
+               subtreeSize[curr] += subtreeSize[neighbour];
+               farthestleafnode[curr]=max(farthestleafnode[curr],1+farthestleafnode[neighbour]);
+
+
+          }
+     }
+     outtime[curr] = timer++;
+
+         
+
+
+}
+ 
+
+
+
+
+void solve() {
+    int n;
+    cin >> n;
+    vector<vector<int>> edges(n+1, vector<int>());// one based indexing
+    for(int i = 0; i < n - 1; i++){
+        int u, v;
+        cin >> u >> v;
+        edges[u].push_back(v);
+        edges[v].push_back(u);
+    }    
+     vector<int> level(n+1,-1);
+     vector<int> parents(n+1,-1);
+     vector<int> subtreeSize(n+1, -1);
+     vector<int>farthestleafnode(n+1,-1);
+     vector<int>intime(n+1,-1);
+     vector<int>outtime(n+1,-1);
+
+     dfs(1, edges, -1, level, parents,subtreeSize, farthestleafnode, intime, outtime);
+
+}
+
