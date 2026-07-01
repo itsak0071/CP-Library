@@ -1,0 +1,42 @@
+void dfs(int curr, vector<vector<int>>& edges, int parent, vector<int>& level){
+    if(parent == -1)
+        level[curr] = 0;
+    else
+        level[curr] = level[parent] + 1;
+    
+    for(int neighbour : edges[curr])
+        if(neighbour != parent)
+            dfs(neighbour, edges, curr, level);
+}
+
+int farthestNode(int n, vector<int>& dist){
+    int farthest = 0;
+    for(int i = 0; i < n; i++){
+        if(dist[i] > dist[farthest])
+            farthest = i;
+    }
+    return farthest;
+}
+
+void solve() {
+    int n;
+    cin >> n;
+    vector<vector<int>> edges(n, vector<int>());
+    for(int i = 0; i < n - 1; i++){
+        int u, v;
+        cin >> u >> v;
+        edges[u].push_back(v);
+        edges[v].push_back(u);
+    }    
+    vector<int> distX(n, -1);
+    vector<int> distY(n, -1);
+    
+    int x = getRandomNumber(0, n - 1);
+    dfs(x, edges, -1, distX);
+    
+    int y = farthestNode(n, distX);
+    dfs(y, edges, -1, distY);
+    
+    int z = farthestNode(n, distY);
+    cout << distY[z] << endl;
+}
