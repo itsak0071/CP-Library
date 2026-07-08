@@ -1,0 +1,79 @@
+// Segment Tree — O(N) build, O(log N) point update and range query
+// Supports multiple Segment Trees with just a change in Node and Update
+// Very few changes required each time
+#include <bits/stdc++.h>
+using namespace std;
+
+template<typename Node, typename Update>
+struct SegTree {
+    vector<Node> tree;
+    int n;
+    int s;
+
+    SegTree(int n, vector<long long>& a) { // change if type updated
+        this->n = n;
+        s = 1;
+        while (s < 2 * n) s <<= 1;
+        tree.resize(s, Node());
+        _build(a, 0, n - 1, 1);
+    }
+
+    void _build(vector<long long>& a, int l, int r, int idx) { // Never change this
+        if (l == r) { tree[idx] = Node(a[l]); return; }
+        int m = (l + r) / 2;
+        _build(a, l, m, 2 * idx);
+        _build(a, m + 1, r, 2 * idx + 1);
+        tree[idx].merge(tree[2 * idx], tree[2 * idx + 1]);
+    }
+
+    void _update(int l, int r, int idx, int pos, Update& u) { // Never change this
+        if (l == r) { u.apply(tree[idx]); return; }
+        int m = (l + r) / 2;
+        if (pos <= m) _update(l, m, 2 * idx, pos, u);
+        else _update(m + 1, r, 2 * idx + 1, pos, u);
+        tree[idx].merge(tree[2 * idx], tree[2 * idx + 1]);
+    }
+
+    Node _query(int l, int r, int idx, int ql, int qr) { // Never change this
+        if (l > qr || r < ql) return Node();
+        if (l >= ql && r <= qr) return tree[idx];
+        int m = (l + r) / 2;
+        Node left = _query(l, m, 2 * idx, ql, qr);
+        Node right = _query(m + 1, r, 2 * idx + 1, ql, qr);
+        Node ans;
+        ans.merge(left, right);
+        return ans;
+    }
+
+    void make_update(int pos, long long val) { // pass in as many parameters as required
+        Update u(val); // may change
+        _update(0, n - 1, 1, pos, u);
+    }
+
+    Node make_query(int l, int r) {
+        return _query(0, n - 1, 1, l, r);
+    }
+};
+
+// Example: sum aggregate, point-set update
+struct Node1 {
+    long long val; // may change
+    Node1() { // Identity element
+        val = 0; // may change
+    }
+    Node1(long long v) { // Actual Node
+        val = v; // may change
+    }
+    void merge(Node1& l, Node1& r) { // Merge two child nodes
+        val = l.val + r.val; // may change
+    }
+};
+struct Update1 {
+    long long val; // may change
+    Update1(long long v) { // Actual Update
+        val = v; // may change
+    }
+    void apply(Node1& a) { // apply update to given node
+        a.val = val; // may change
+    }
+};
