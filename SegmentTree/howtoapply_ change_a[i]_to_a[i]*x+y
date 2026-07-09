@@ -1,0 +1,48 @@
+Bhai, sabse pehle toh is math ko thoda simplify kar lete hain.
+
+Dhyan se dekho: a[i] * x + a[i] * y ko hum seedha a[i] * (x + y) likh sakte hain. Isse tumhari calculation fast ho jayegi aur code clean dikhega.
+
+Kyunki yeh ek single index i par update (Point Update) hai, toh iske liye tumhe apne Segment Tree ke template ko ek line bhi change karne ki zarurat nahi hai! Tumhare paas 2 tarike hain isko handle karne ke:
+
+Tarika 1: solve() function mein new value calculate karke pass karo (Best & Recommended)
+Template ko generic rakhne ka sabse best tarika hai ki math operation bahar hi kar lo aur final value ko update function mein bhej do.
+
+C++
+void solve() {
+    // ... tumhara baki code ...
+    
+    int index_to_update = i; 
+    int x = 2, y = 3; // example values
+    
+    // 1. Nayi value calculate karo
+    int new_value = arr[index_to_update] * (x + y);
+    
+    // 2. Apne update function ko call karke overwrite kar do
+    update(0, n - 1, 1, index_to_update, new_value);
+}
+Fayda: Isse tumhara Segment tree template 100% untouched rehta hai aur kisi bhi tarah ke question mein reuse ho sakta hai.
+
+Tarika 2: Agar update function ke andar hi logic likhna hai
+Agar tum chahte ho ki function call mein sirf x aur y bhejein aur tree khud math handle kare, toh tumhe update function ke Base Case ko thoda modify karna padega.
+
+(Is case mein value parameter ki jagah hum multiplier bhejenge jo x+y hoga)
+
+C++
+void update(int s, int e, int idx, int update_index, int multiplier) {
+    // Base Case
+    if (s == e) {
+        // Yahan par direct math operation lagao
+        arr[s] = arr[s] * multiplier; 
+        seg[idx] = Node(arr[s]);
+        return;
+    }
+    
+    int mid = (s + e) / 2;
+    if (update_index <= mid) {
+        update(s, mid, 2 * idx, update_index, multiplier);
+    } else {
+        update(mid + 1, e, 2 * idx + 1, update_index, multiplier);
+    }
+    
+    seg[idx] = combine(seg[2 * idx], seg[2 * idx + 1]);
+}
