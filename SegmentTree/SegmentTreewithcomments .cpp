@@ -14,7 +14,7 @@ struct Node {
     
     // Default Constructor: Yeh 'Identity Element' hota hai. 
     // Iski value aisi honi chahiye jo answer pe asar na dale.
-    // Example: Sum ke liye 0, Min ke liye INF, Max ke liye -INF, GCD ke liye 0
+    // Example: Sum ke liye 0, Min ke liye INF, Max ke liye -INF, GCD ke liye 0 or ke liye 0  and ke liye   (1<<31)-1//means all bits set;
     Node() {
         val = 0;
     }
